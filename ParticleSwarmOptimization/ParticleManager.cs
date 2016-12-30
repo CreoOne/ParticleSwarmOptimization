@@ -9,7 +9,15 @@ namespace ParticleSwarmOptimization
     public class ParticleManager<DataType>
     {
         private FitnessPriorityEnum _FitnessPriority = FitnessPriorityEnum.Rising; 
-        public FitnessPriorityEnum FitnessPriority { get; set; }
+        public FitnessPriorityEnum FitnessPriority
+        {
+            get { return _FitnessPriority; }
+            set
+            {
+                _FitnessPriority = value;
+                UpdateFitting();
+            }
+        }
 
         public IParticle<DataType> BestParticle { get { return Particles.FirstOrDefault(); } }
         public IParticle<DataType>[] Particles { get; private set; }
