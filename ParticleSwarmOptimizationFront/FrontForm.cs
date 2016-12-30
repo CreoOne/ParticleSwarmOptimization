@@ -17,22 +17,25 @@ namespace ParticleSwarmOptimizationFront
         public FrontForm()
         {
             InitializeComponent();
+        }
 
-            Func<Vector2, double> fittnessFunction = delegate (Vector2 model)
+        private void bSimple2DVisualisation_Click(object sender, EventArgs e)
+        {
+            try
             {
-                return -(Vector2.Zero - model).Length();
-            };
+                using (Simple2DVisualisation form = new Simple2DVisualisation())
+                    form.ShowDialog();
+            }
 
-            Vector2Particle[] particles = new Vector2Particle[20];
-            Random rng = new Random(DateTime.Now.Millisecond);
+            catch(Exception exception)
+            {
+                ShowException(exception);
+            }
+        }
 
-            foreach(int i in Enumerable.Range(0, 20))
-                particles[i] = new Vector2Particle(new Vector2(rng.Next(-10, 10), rng.Next(-10, 10)), fittnessFunction);
-
-            ParticleManager<Vector2> manager = new ParticleManager<Vector2>(particles);
-
-            foreach (int i in Enumerable.Range(0, 100))
-                manager.MoveParticles();
+        private void ShowException(Exception exception)
+        {
+            MessageBox.Show(this, exception.Message, exception.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
