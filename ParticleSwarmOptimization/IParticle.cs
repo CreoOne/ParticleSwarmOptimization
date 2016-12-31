@@ -13,5 +13,8 @@ namespace ParticleSwarmOptimization
         List<DataType> History { get; }
 
         void Step(IParticle<DataType> target);
+        bool Overlaps(IParticle<DataType> target);
+        bool TooClose(IParticle<DataType> target);
+        void Orbit(IParticle<DataType> target, double radius);
     }
 }

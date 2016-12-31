@@ -21,14 +21,20 @@ namespace ParticleSwarmOptimizationFront
         public Simple2DVisualisation()
         {
             InitializeComponent();
-
-            FitnessFunction = (Vector2 model) => { return Math.Max(0, Math.Min(255-(new Vector2(50, 50) - model).Length(), 255)); };
+            FitnessFunction = (Vector2 model) =>
+            {
+                float scale = 10;
+                float multiply = 30;
+                float xValue = (fitnessMap.Width / 2) + ((float)Math.Sin(model.X / scale) + 1) * multiply;
+                float yValue = (fitnessMap.Height / 2) + ((float)Math.Cos(model.Y / scale) + 1) * multiply;
+                return Math.Max(0, Math.Min((255 - 2 * multiply) - (new Vector2(xValue, yValue) - model).Length(), 255));
+            };
         }
 
         public void GenerateParticles(int amount)
         {
             Vector2Particle[] particles = new Vector2Particle[amount];
-            Random rng = new Random(DateTime.Now.Millisecond);
+            Random rng = new Random();
 
             foreach (int i in Enumerable.Range(0, amount))
                 particles[i] = new Vector2Particle(new Vector2(rng.Next(0, fitnessMap.Width), rng.Next(0, fitnessMap.Height)), FitnessFunction);

@@ -8,6 +8,7 @@ namespace ParticleSwarmOptimization
 {
     public class ParticleManager<DataType>
     {
+        private double DiscoveryRange = 10;
         private FitnessPriorityEnum _FitnessPriority = FitnessPriorityEnum.Rising; 
         public FitnessPriorityEnum FitnessPriority
         {
@@ -39,9 +40,29 @@ namespace ParticleSwarmOptimization
             IParticle<DataType> best = Particles.First();
 
             foreach (IParticle<DataType> particle in Particles.Skip(1))
+            {
                 particle.Step(best);
 
+                if (particle.TooClose(best))
+                    particle.Orbit(best, ExtendDiscoveryRange());
+            }
+
+            foreach (IParticle<DataType> firstParticle in Particles.Skip(1))
+                foreach (IParticle<DataType> secondParticle in Particles.Skip(1))
+                {
+                    if (firstParticle == secondParticle)
+                        continue;
+
+                    if (firstParticle.Overlaps(secondParticle))
+                        firstParticle.Orbit(best, ExtendDiscoveryRange());
+                }
+
             UpdateFitting();
+        }
+
+        private double ExtendDiscoveryRange()
+        {
+            return DiscoveryRange = Math.Min(double.MaxValue - 10, DiscoveryRange * (1 + 1 / (double)Particles.Count()));
         }
 
         private void UpdateFitting()
