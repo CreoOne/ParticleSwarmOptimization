@@ -43,6 +43,7 @@
     <Compile Include="FitnessPriority.cs" />
     <Compile Include="IParticle.cs" />
     <Compile Include="ParticleManager.cs" />
+    <Compile Include="ParticleManagerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

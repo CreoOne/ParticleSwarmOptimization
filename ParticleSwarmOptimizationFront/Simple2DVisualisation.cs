@@ -39,7 +39,7 @@ namespace ParticleSwarmOptimizationFront
             foreach (int i in Enumerable.Range(0, amount))
                 particles[i] = new Vector2Particle(new Vector2(rng.Next(0, fitnessMap.Width), rng.Next(0, fitnessMap.Height)), FitnessFunction);
 
-            ParticleManager = new ParticleManager<Vector2>(particles);
+            ParticleManager = ParticleManagerFactory.Create(particles);
             ParticleManager.FitnessPriority = FitnessPriorityEnum.Rising;
         }
 
