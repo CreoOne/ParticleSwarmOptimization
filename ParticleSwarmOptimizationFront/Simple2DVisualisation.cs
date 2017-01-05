@@ -42,13 +42,13 @@ namespace ParticleSwarmOptimizationFront
             ParticleManager = ParticleManagerFactory.Create(particles);
         }
 
-        private Bitmap GenerateFitnessBitmap()
+        private void GenerateFitnessBitmap()
         {
             Bitmap result = new Bitmap(fitnessMap.Width, fitnessMap.Height);
 
             using (Graphics graphics = Graphics.FromImage(result))
             {
-                float sampleSize = 5;
+                float sampleSize = 2;
 
                 int ySamples = (int)Math.Ceiling(fitnessMap.Height / sampleSize) + 1;
                 int xSamples = (int)Math.Ceiling(fitnessMap.Width / sampleSize) + 1;
@@ -63,17 +63,15 @@ namespace ParticleSwarmOptimizationFront
                     }
                 }
 
-                return result;
+                if (FitnessBitmap != null)
+                    FitnessBitmap.Dispose();
+
+                FitnessBitmap = result;
             }
         }
 
         public void RedrawFitnessMap()
         {
-            if (FitnessBitmap != null)
-                FitnessBitmap.Dispose();
-
-            FitnessBitmap = GenerateFitnessBitmap();
-
             if (ParticleManager == null)
                 return;
 
@@ -86,20 +84,25 @@ namespace ParticleSwarmOptimizationFront
             {
                 graphics.DrawImage(FitnessBitmap, 0, 0);
 
-                using (SolidBrush brush = new SolidBrush(Color.Red))
-                    foreach (Vector2Particle particle in ParticleManager.Particles)
+                foreach (Vector2Particle particle in ParticleManager.Particles)
+                {
+                    bool best = ParticleManager.BestParticle == particle;
+                    using (SolidBrush brush = new SolidBrush(best ? Color.Aqua : Color.Red))
                         graphics.FillPie(brush, particle.Model.X, particle.Model.Y, 5, 5, 0, 360);
+                }
             }
         }
 
         private void Simple2DVisualisation_ResizeEnd(object sender, EventArgs e)
         {
+            GenerateFitnessBitmap();
             RedrawFitnessMap();
         }
 
         private void Simple2DVisualisation_Shown(object sender, EventArgs e)
         {
             GenerateParticles(20);
+            GenerateFitnessBitmap();
             RedrawFitnessMap();
         }
 
@@ -112,6 +115,7 @@ namespace ParticleSwarmOptimizationFront
         private void bRegenerateParticles_Click(object sender, EventArgs e)
         {
             GenerateParticles(20);
+            GenerateFitnessBitmap();
             RedrawFitnessMap();
         }
     }

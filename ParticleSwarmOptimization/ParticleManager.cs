@@ -33,7 +33,7 @@ namespace ParticleSwarmOptimization
             {
                 particle.Step(best);
 
-                if (particle.TooClose(best))
+                if (particle.TooClose(best, 2))
                     particle.Orbit(best, ExtendDiscoveryRange());
             }
 

@@ -67,9 +67,9 @@ namespace ParticleSwarmOptimizationFront
             return Vector2.Dot(selfTrailNormal, Model - target.Model) < 0;
         }
 
-        public bool TooClose(IParticle<Vector2> target)
+        public bool TooClose(IParticle<Vector2> target, double distance)
         {
-            return (Model - target.Model).Length() < 1;
+            return (Model - target.Model).Length() < distance;
         }
 
         public void Orbit(IParticle<Vector2> target, double radius)
