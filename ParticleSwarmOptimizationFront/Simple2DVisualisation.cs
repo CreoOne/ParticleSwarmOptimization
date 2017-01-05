@@ -40,7 +40,6 @@ namespace ParticleSwarmOptimizationFront
                 particles[i] = new Vector2Particle(new Vector2(rng.Next(0, fitnessMap.Width), rng.Next(0, fitnessMap.Height)), FitnessFunction);
 
             ParticleManager = ParticleManagerFactory.Create(particles);
-            ParticleManager.FitnessPriority = FitnessPriorityEnum.Rising;
         }
 
         private Bitmap GenerateFitnessBitmap()

@@ -9,16 +9,6 @@ namespace ParticleSwarmOptimization
     public class ParticleManager<DataType>
     {
         private double DiscoveryRange = 10;
-        private FitnessPriorityEnum _FitnessPriority = FitnessPriorityEnum.Rising; 
-        public FitnessPriorityEnum FitnessPriority
-        {
-            get { return _FitnessPriority; }
-            set
-            {
-                _FitnessPriority = value;
-                UpdateFitting();
-            }
-        }
 
         public IParticle<DataType> BestParticle { get { return Particles.FirstOrDefault(); } }
         public IParticle<DataType>[] Particles { get; private set; }
@@ -67,10 +57,7 @@ namespace ParticleSwarmOptimization
 
         private void UpdateFitting()
         {
-            if (_FitnessPriority == FitnessPriorityEnum.Falling)
-                Particles = Particles.OrderBy(particle => particle.Fitness).ToArray();
-            else
-                Particles = Particles.OrderByDescending(particle => particle.Fitness).ToArray();
+            Particles = Particles.OrderByDescending(particle => particle.Fitness).ToArray();
         }
     }
 }

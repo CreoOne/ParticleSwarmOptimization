@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FitnessPriority.cs" />
     <Compile Include="IParticle.cs" />
     <Compile Include="ParticleManager.cs" />
     <Compile Include="ParticleManagerFactory.cs" />
