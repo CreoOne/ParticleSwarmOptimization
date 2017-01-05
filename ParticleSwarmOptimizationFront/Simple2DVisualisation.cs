@@ -38,7 +38,7 @@ namespace ParticleSwarmOptimizationFront
             foreach (int i in Enumerable.Range(0, amount))
                 particles[i] = new Vector2Particle(new Vector2(rng.Next(0, fitnessMap.Width), rng.Next(0, fitnessMap.Height)), FitnessFunction);
 
-            ParticleManager = ParticleManagerFactory.Create(particles);
+            ParticleManager = ParticleManagerFactory.Create(particles, 1);
         }
 
         private void GenerateFitnessBitmap()

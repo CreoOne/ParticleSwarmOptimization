@@ -8,9 +8,9 @@ namespace ParticleSwarmOptimization
 {
     public static class ParticleManagerFactory
     {
-        public static ParticleManager<DataType> Create<DataType>(IEnumerable<IParticle<DataType>> particles)
+        public static ParticleManager<DataType> Create<DataType>(IEnumerable<IParticle<DataType>> particles, double tooClose)
         {
-            return new ParticleManager<DataType>(particles);
+            return new ParticleManager<DataType>(particles, tooClose);
         }
     }
 }

@@ -8,12 +8,13 @@ namespace ParticleSwarmOptimization
 {
     public class ParticleManager<DataType>
     {
-        private double DiscoveryRange = 0.0001d;
+        public double TooClose { get; private set; }
+        private double DiscoveryRange;
 
         public IParticle<DataType> BestParticle { get { return Particles.FirstOrDefault(); } }
         public IParticle<DataType>[] Particles { get; private set; }
 
-        public ParticleManager(IEnumerable<IParticle<DataType>> particles)
+        public ParticleManager(IEnumerable<IParticle<DataType>> particles, double tooClose)
         {
             if (particles == null)
                 throw new ArgumentNullException("particles");
@@ -21,6 +22,11 @@ namespace ParticleSwarmOptimization
             if (particles.Count() < 2)
                 throw new ArgumentException("ParticleManager requires at least 2 particles to operate on.", "particles");
 
+            if (tooClose <= 0)
+                throw new ArgumentOutOfRangeException("tooClose");
+
+            TooClose = tooClose;
+            DiscoveryRange = TooClose;
             Particles = particles.ToArray();
             UpdateFitting();
         }
@@ -33,7 +39,7 @@ namespace ParticleSwarmOptimization
             {
                 particle.Step(best);
 
-                if (particle.TooClose(best, 1))
+                if (particle.TooClose(best, TooClose))
                     particle.Orbit(best, ExtendDiscoveryRange());
             }
 
@@ -42,7 +48,7 @@ namespace ParticleSwarmOptimization
 
         private double ExtendDiscoveryRange()
         {
-            return DiscoveryRange = Math.Min(float.MaxValue -1, DiscoveryRange + (1 + 1d / (double)Particles.Count()));
+            return DiscoveryRange = Math.Min(float.MaxValue - 1, DiscoveryRange + (1 + 1 / (double)Particles.Count()));
         }
 
         private void UpdateFitting()
