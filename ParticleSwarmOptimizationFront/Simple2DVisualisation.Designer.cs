@@ -41,7 +41,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fitnessMap.Location = new System.Drawing.Point(0, 41);
             this.fitnessMap.Name = "fitnessMap";
-            this.fitnessMap.Size = new System.Drawing.Size(543, 340);
+            this.fitnessMap.Size = new System.Drawing.Size(543, 273);
             this.fitnessMap.TabIndex = 0;
             this.fitnessMap.TabStop = false;
             // 
@@ -69,7 +69,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(543, 381);
+            this.ClientSize = new System.Drawing.Size(543, 314);
             this.Controls.Add(this.bRegenerateParticles);
             this.Controls.Add(this.bMove);
             this.Controls.Add(this.fitnessMap);

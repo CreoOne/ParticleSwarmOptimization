@@ -39,35 +39,6 @@ namespace ParticleSwarmOptimizationFront
             UpdateFitness();
         }
 
-        public bool Overlaps(IParticle<Vector2> target)
-        {
-            const double precision = double.Epsilon * 2d;
-
-            if (History.Count < 1)
-                return false;
-
-            Vector2 selfTrail = Model - History.Last();
-
-            if (selfTrail.Length() < precision)
-                return false;
-
-            if (target.History.Count < 1)
-                return false;
-
-            Vector2 targetTrail = target.Model - target.History.Last();
-
-            if (selfTrail.Length() < precision)
-                return false;
-
-            Vector2 selfTrailNormal = Vector2.Normalize(selfTrail);
-            Vector2 targetTrailNormal = Vector2.Normalize(targetTrail);
-
-            if (GetAngleDistance(GetAngle(selfTrailNormal), GetAngle(targetTrailNormal)) > 0.2)
-                return false;
-
-            return Vector2.Dot(selfTrailNormal, Model - target.Model) < 0;
-        }
-
         public bool TooClose(IParticle<Vector2> target, double distance)
         {
             return (Model - target.Model).Length() < distance;
@@ -91,28 +62,6 @@ namespace ParticleSwarmOptimizationFront
                 var ul = BitConverter.ToUInt64(bytes, 0) / (1 << 11);
                 return ul / (double)(1UL << 53);
             }
-        }
-
-        private double GetAngle(Vector2 vector)
-        {
-            double angle = Math.Atan2(vector.Y, vector.X);
-
-            if (angle < 0)
-                return angle + 2d * Math.PI;
-
-            return angle;
-        }
-
-        private double GetAngleDistance(double q, double r)
-        {
-            if(q > r)
-            {
-                double holder = q;
-                q = r;
-                r = holder;
-            }
-
-            return Math.Min(Math.Abs(r - q), q + (Math.PI * 2d - r));
         }
     }
 }

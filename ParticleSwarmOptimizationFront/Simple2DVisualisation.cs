@@ -25,7 +25,7 @@ namespace ParticleSwarmOptimizationFront
             {
                 double scale = 20;
                 double sin = (Math.Sin(model.X / scale) + Math.Cos(model.Y / scale) + 2) / 4d * 127;
-                double dist = 127 - Math.Min(127, (new Vector2(fitnessMap.Width / 2, fitnessMap.Height / 2) - model).Length());
+                double dist = 127 - Math.Min(127, (new Vector2(fitnessMap.Width / 2, fitnessMap.Height / 2) - model).Length() / scale);
                 return sin + dist;
             };
         }

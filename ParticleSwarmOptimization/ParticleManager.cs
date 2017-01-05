@@ -8,7 +8,7 @@ namespace ParticleSwarmOptimization
 {
     public class ParticleManager<DataType>
     {
-        private double DiscoveryRange = 10;
+        private double DiscoveryRange = 0.0001d;
 
         public IParticle<DataType> BestParticle { get { return Particles.FirstOrDefault(); } }
         public IParticle<DataType>[] Particles { get; private set; }
@@ -33,26 +33,16 @@ namespace ParticleSwarmOptimization
             {
                 particle.Step(best);
 
-                if (particle.TooClose(best, 2))
+                if (particle.TooClose(best, 1))
                     particle.Orbit(best, ExtendDiscoveryRange());
             }
-
-            foreach (IParticle<DataType> firstParticle in Particles.Skip(1))
-                foreach (IParticle<DataType> secondParticle in Particles.Skip(1))
-                {
-                    if (firstParticle == secondParticle)
-                        continue;
-
-                    if (firstParticle.Overlaps(secondParticle))
-                        firstParticle.Orbit(best, ExtendDiscoveryRange());
-                }
 
             UpdateFitting();
         }
 
         private double ExtendDiscoveryRange()
         {
-            return DiscoveryRange = Math.Min(float.MaxValue -1, DiscoveryRange + 1);
+            return DiscoveryRange = Math.Min(float.MaxValue -1, DiscoveryRange + (1 + 1d / (double)Particles.Count()));
         }
 
         private void UpdateFitting()
