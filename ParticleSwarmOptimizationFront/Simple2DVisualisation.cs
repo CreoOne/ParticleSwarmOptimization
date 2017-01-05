@@ -23,11 +23,10 @@ namespace ParticleSwarmOptimizationFront
             InitializeComponent();
             FitnessFunction = (Vector2 model) =>
             {
-                float scale = 10;
-                float multiply = 30;
-                float xValue = (fitnessMap.Width / 2) + ((float)Math.Sin(model.X / scale) + 1) * multiply;
-                float yValue = (fitnessMap.Height / 2) + ((float)Math.Cos(model.Y / scale) + 1) * multiply;
-                return Math.Max(0, Math.Min((255 - 2 * multiply) - (new Vector2(xValue, yValue) - model).Length(), 255));
+                double scale = 20;
+                double sin = (Math.Sin(model.X / scale) + Math.Cos(model.Y / scale) + 2) / 4d * 127;
+                double dist = 127 - Math.Min(127, (new Vector2(fitnessMap.Width / 2, fitnessMap.Height / 2) - model).Length());
+                return sin + dist;
             };
         }
 

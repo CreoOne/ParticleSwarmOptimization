@@ -52,7 +52,7 @@ namespace ParticleSwarmOptimization
 
         private double ExtendDiscoveryRange()
         {
-            return DiscoveryRange = Math.Min(double.MaxValue - 10, DiscoveryRange * (1 + 1 / (double)Particles.Count()));
+            return DiscoveryRange = Math.Min(float.MaxValue -1, DiscoveryRange + 1);
         }
 
         private void UpdateFitting()

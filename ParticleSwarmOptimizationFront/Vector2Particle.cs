@@ -60,8 +60,9 @@ namespace ParticleSwarmOptimizationFront
                 return false;
 
             Vector2 selfTrailNormal = Vector2.Normalize(selfTrail);
+            Vector2 targetTrailNormal = Vector2.Normalize(targetTrail);
 
-            if (Vector2.Dot(selfTrailNormal, Vector2.Normalize(targetTrail)) < 0.999d)
+            if (GetAngleDistance(GetAngle(selfTrailNormal), GetAngle(targetTrailNormal)) > 0.2)
                 return false;
 
             return Vector2.Dot(selfTrailNormal, Model - target.Model) < 0;
@@ -90,6 +91,28 @@ namespace ParticleSwarmOptimizationFront
                 var ul = BitConverter.ToUInt64(bytes, 0) / (1 << 11);
                 return ul / (double)(1UL << 53);
             }
+        }
+
+        private double GetAngle(Vector2 vector)
+        {
+            double angle = Math.Atan2(vector.Y, vector.X);
+
+            if (angle < 0)
+                return angle + 2d * Math.PI;
+
+            return angle;
+        }
+
+        private double GetAngleDistance(double q, double r)
+        {
+            if(q > r)
+            {
+                double holder = q;
+                q = r;
+                r = holder;
+            }
+
+            return Math.Min(Math.Abs(r - q), q + (Math.PI * 2d - r));
         }
     }
 }
