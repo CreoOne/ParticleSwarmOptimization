@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ParticleSwarmOptimization;
 using System.Numerics;
+using System.Linq;
 
 namespace ParticleSwarmOptimizationFront
 {
@@ -9,12 +10,13 @@ namespace ParticleSwarmOptimizationFront
     {
         private static Random Rand = new Random();
 
-        public Vector2Machine(Func<Vector2, double> fitness, IEnumerable<Vector2> particles) : base(fitness, particles)
+        public Vector2Machine(Func<Vector2, double> fitness, IEnumerable<Vector2> particles, double orbitRadius, double proximityLimit) : base(fitness, particles)
         {
-            OrbitRadius = 10;
+            OrbitRadius = orbitRadius;
+            ProximityLimit = proximityLimit;
         }
 
-        public override double ProximityLimit { get { return 5; } protected set { } }
+        public override double ProximityLimit { get; protected set; }
         public override double OrbitRadius { get; protected set; }
 
         protected override Vector2 Move(Vector2 particle, Vector2 target)
@@ -25,6 +27,7 @@ namespace ParticleSwarmOptimizationFront
         protected override Vector2 Orbit(Vector2 particle, Vector2 target, double radius)
         {
             OrbitRadius += 1;
+            ProximityLimit += 1 / (double)GetParticles().Count() / 2d;
             Vector2 unnormalized;
             do { unnormalized = new Vector2((float)Rand.NextDouble() * 2 - 1, (float)Rand.NextDouble() * 2 -1); }
             while (unnormalized.Length() <= float.Epsilon);

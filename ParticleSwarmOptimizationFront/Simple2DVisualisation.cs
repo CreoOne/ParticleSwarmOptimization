@@ -24,9 +24,10 @@ namespace ParticleSwarmOptimizationFront
             FitnessFunction = (Vector2 model) =>
             {
                 double distanceFromCenter = (new Vector2(fitnessMap.Width / 2f, fitnessMap.Height / 2f) - model).Length();
-                double wave = (Math.Sin(distanceFromCenter / 10d) + 1) * 50;
-
-                double result = (distanceFromCenter < 31 ? 0 : wave) + distanceFromCenter / 2d;
+                double sin = Math.Sin(model.X / 10d) / 2d + 0.5;
+                double cos = Math.Cos(model.Y / 10d) / 2d + 0.5;
+                
+                double result = ((sin + cos) / 2d) * 100 + distanceFromCenter / 2d;
 
                 return Math.Max(0, Math.Min(255, result));
             };
@@ -37,7 +38,7 @@ namespace ParticleSwarmOptimizationFront
             Random rng = new Random();
 
             IEnumerable<Vector2> particles = Enumerable.Range(0, amount).Select(i => new Vector2(rng.Next(0, fitnessMap.Width), rng.Next(0, fitnessMap.Height)));
-            Machine = new Vector2Machine(FitnessFunction, particles);
+            Machine = new Vector2Machine(FitnessFunction, particles, 10, 2);
         }
 
         private void GenerateFitnessBitmap()
