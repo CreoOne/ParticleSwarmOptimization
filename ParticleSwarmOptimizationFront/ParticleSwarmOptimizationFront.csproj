@@ -64,7 +64,7 @@
     <Compile Include="Simple2DVisualisation.Designer.cs">
       <DependentUpon>Simple2DVisualisation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Vector2Particle.cs" />
+    <Compile Include="Vector2Machine.cs" />
     <EmbeddedResource Include="FrontForm.resx">
       <DependentUpon>FrontForm.cs</DependentUpon>
     </EmbeddedResource>

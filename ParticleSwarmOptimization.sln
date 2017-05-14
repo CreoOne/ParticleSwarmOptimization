@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParticleSwarmOptimizationFront", "ParticleSwarmOptimizationFront\ParticleSwarmOptimizationFront.csproj", "{0F52D8E9-B636-46AF-81AD-DBE27C338AA4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{79A69AE6-FF00-4F60-86A2-BF22637160DA} = {79A69AE6-FF00-4F60-86A2-BF22637160DA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParticleSwarmOptimization", "ParticleSwarmOptimization\ParticleSwarmOptimization.csproj", "{79A69AE6-FF00-4F60-86A2-BF22637160DA}"
 EndProject
