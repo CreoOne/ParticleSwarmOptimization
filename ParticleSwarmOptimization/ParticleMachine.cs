@@ -13,15 +13,7 @@ namespace ParticleSwarmOptimization
         public ParticleMachine(Func<DataType, double> fitness, IEnumerable<DataType> particles)
         {
             FitnessFunction = fitness ?? throw new ArgumentNullException("fitness");
-
-            if (particles == null)
-                throw new ArgumentNullException("particles");
-
-            if (particles.Count() < 2)
-                throw new ArgumentException("At least 2 particles required", "particles");
-
             SetParticles(particles);
-            UpdateFitness();
         }
 
         protected abstract DataType Move(DataType particle, DataType target);
@@ -56,7 +48,25 @@ namespace ParticleSwarmOptimization
 
         private void SetParticles(IEnumerable<DataType> particles)
         {
-            Particles = particles.Select(p => new ParticleHandler<DataType> { Fitness = double.MaxValue, Model = p }).ToArray();
+            if (particles == null)
+                throw new ArgumentNullException("particles");
+
+            if (particles.Count() < 2)
+                throw new ArgumentException("At least 2 particles required", "particles");
+
+            Particles = new ParticleHandler<DataType>[] { };
+            AddParticles(particles);
+        }
+
+        public void AddParticle(DataType particle)
+        {
+            AddParticles(new[] { particle });
+        }
+
+        public void AddParticles(IEnumerable<DataType> particles)
+        {
+            Particles = Particles.Concat(particles.Select(p => new ParticleHandler<DataType> { Fitness = double.MaxValue, Model = p })).ToArray();
+            UpdateFitness();
         }
 
         private void UpdateFitness()
