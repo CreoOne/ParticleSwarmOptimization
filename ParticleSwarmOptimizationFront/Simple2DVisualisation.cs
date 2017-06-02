@@ -17,13 +17,14 @@ namespace ParticleSwarmOptimizationFront
         private Vector2Machine Machine;
         private Func<Vector2, double> FitnessFunction;
         private Bitmap FitnessBitmap;
+        private int Step;
 
         public Simple2DVisualisation()
         {
             InitializeComponent();
             FitnessFunction = (Vector2 model) =>
             {
-                double distanceFromCenter = (new Vector2(fitnessMap.Width / 2f, fitnessMap.Height / 2f) - model).Length();
+                double distanceFromCenter = (new Vector2(fitnessMap.Width / 2f + (float)Math.Sin(Step / 10f) * 100f, fitnessMap.Height / 2f + (float)Math.Cos(Step / 10f) * 100f) - model).Length();
                 double sin = Math.Sin(model.X / 10d) / 2d + 0.5;
                 double cos = Math.Cos(model.Y / 10d) / 2d + 0.5;
                 
@@ -33,11 +34,15 @@ namespace ParticleSwarmOptimizationFront
             };
         }
 
-        public void GenerateParticles(int amount)
+        public Vector2 GenerateParticle()
         {
             Random rng = new Random();
+            return new Vector2(rng.Next(0, fitnessMap.Width), rng.Next(0, fitnessMap.Height));
+        }
 
-            IEnumerable<Vector2> particles = Enumerable.Range(0, amount).Select(i => new Vector2(rng.Next(0, fitnessMap.Width), rng.Next(0, fitnessMap.Height)));
+        public void GenerateParticles(int amount)
+        {
+            IEnumerable<Vector2> particles = Enumerable.Range(0, amount).Select(i => GenerateParticle());
             Machine = new Vector2Machine(FitnessFunction, particles, OperationMode.Minimization, 10, 2);
         }
 
@@ -47,7 +52,7 @@ namespace ParticleSwarmOptimizationFront
 
             using (Graphics graphics = Graphics.FromImage(result))
             {
-                float sampleSize = 4;
+                float sampleSize = 10;
 
                 int ySamples = (int)Math.Ceiling(fitnessMap.Height / sampleSize) + 1;
                 int xSamples = (int)Math.Ceiling(fitnessMap.Width / sampleSize) + 1;
@@ -108,7 +113,12 @@ namespace ParticleSwarmOptimizationFront
         private void bMove_Click(object sender, EventArgs e)
         {
             Machine.Advance();
+            GenerateFitnessBitmap();
             RedrawFitnessMap();
+            Step++;
+
+            if (Step % 10 == 0)
+                Machine.AddParticle(GenerateParticle());
         }
 
         private void bRegenerateParticles_Click(object sender, EventArgs e)
