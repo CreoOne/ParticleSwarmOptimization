@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ParticleSwarmOptimization
 {
@@ -34,28 +35,35 @@ namespace ParticleSwarmOptimization
 
         private void Move()
         {
-            foreach (ParticleHandler<DataType> particle in Particles)
+            Action<ParticleHandler<DataType>> moveAction = particle =>
+            {
                 if (particle != BestParticle)
                     particle.Model = Move(particle.Model, BestParticle.Model);
+            };
+
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
+            Parallel.ForEach(Particles, parallelOptions, moveAction);
         }
 
         private void Collide()
         {
-            int particlesCount = Particles.Count();
-
-            foreach (int primary in Enumerable.Range(0, particlesCount))
-                foreach (int secondary in Enumerable.Range(primary + 1, particlesCount - primary - 1))
+            Action<int> collideAction = primary =>
+            {
+                foreach (int secondary in Enumerable.Range(primary + 1, Particles.Length - primary - 1))
                 {
                     ParticleHandler<DataType> secondaryParticle = Particles[secondary];
 
                     if (secondaryParticle == BestParticle)
-                        continue;
+                        return;
 
                     if (TooClose(secondaryParticle.Model, Particles[primary].Model, ProximityLimit))
                         secondaryParticle.Model = Orbit(secondaryParticle.Model, BestParticle.Model, OrbitRadius);
                 }
-        }
+            };
 
+            ParallelOptions parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
+            Parallel.ForEach(Enumerable.Range(0, Particles.Length), parallelOptions, collideAction);
+        }
 
         private void UpdateFitness()
         {
