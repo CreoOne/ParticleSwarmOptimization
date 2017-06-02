@@ -38,7 +38,7 @@ namespace ParticleSwarmOptimizationFront
             Random rng = new Random();
 
             IEnumerable<Vector2> particles = Enumerable.Range(0, amount).Select(i => new Vector2(rng.Next(0, fitnessMap.Width), rng.Next(0, fitnessMap.Height)));
-            Machine = new Vector2Machine(FitnessFunction, particles, 10, 2);
+            Machine = new Vector2Machine(FitnessFunction, particles, OperationMode.Minimization, 10, 2);
         }
 
         private void GenerateFitnessBitmap()

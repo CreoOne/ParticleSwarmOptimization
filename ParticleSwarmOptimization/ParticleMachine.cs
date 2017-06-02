@@ -6,13 +6,15 @@ namespace ParticleSwarmOptimization
 {
     public abstract class ParticleMachine<DataType>
     {
+        private OperationMode Mode { get; set; }
         private Func<DataType, double> FitnessFunction { get; set; }
         private ParticleHandler<DataType> BestParticle { get; set; }
         private ParticleHandler<DataType>[] Particles { get; set; }
 
-        public ParticleMachine(Func<DataType, double> fitness, IEnumerable<DataType> particles)
+        public ParticleMachine(Func<DataType, double> fitness, IEnumerable<DataType> particles, OperationMode mode)
         {
             FitnessFunction = fitness ?? throw new ArgumentNullException("fitness");
+            Mode = mode;
             SetParticles(particles);
         }
 
@@ -65,7 +67,7 @@ namespace ParticleSwarmOptimization
 
         public void AddParticles(IEnumerable<DataType> particles)
         {
-            Particles = Particles.Concat(particles.Select(p => new ParticleHandler<DataType> { Fitness = double.MaxValue, Model = p })).ToArray();
+            Particles = Particles.Concat(particles.Select(p => new ParticleHandler<DataType> { Model = p })).ToArray();
             UpdateFitness();
         }
 
@@ -77,11 +79,25 @@ namespace ParticleSwarmOptimization
             {
                 particle.Fitness = FitnessFunction.Invoke(particle.Model);
 
-                if (best == null || particle.Fitness < best.Fitness)
+                if(IsSuperrior(particle, best))
                     best = particle;
             }
 
             BestParticle = best;
+        }
+
+        private bool IsSuperrior(ParticleHandler<DataType> particleInQuestion, ParticleHandler<DataType> currentBestParticle)
+        {
+            if (currentBestParticle == null)
+                return true;
+
+            if (Mode == OperationMode.Minimization && particleInQuestion.Fitness < currentBestParticle.Fitness)
+                return true;
+
+            if (Mode == OperationMode.Maximization && particleInQuestion.Fitness > currentBestParticle.Fitness)
+                return true;
+
+            return false;
         }
 
         public DataType GetBestParticle()

@@ -10,7 +10,7 @@ namespace ParticleSwarmOptimizationFront
     {
         private static Random Rand = new Random();
 
-        public Vector2Machine(Func<Vector2, double> fitness, IEnumerable<Vector2> particles, double orbitRadius, double proximityLimit) : base(fitness, particles)
+        public Vector2Machine(Func<Vector2, double> fitness, IEnumerable<Vector2> particles, OperationMode mode, double orbitRadius, double proximityLimit) : base(fitness, particles, mode)
         {
             OrbitRadius = orbitRadius;
             ProximityLimit = proximityLimit;
