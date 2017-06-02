@@ -27,10 +27,20 @@ namespace ParticleSwarmOptimization
 
         public void Advance()
         {
+            Move();
+            Collide();
+            UpdateFitness();
+        }
+
+        private void Move()
+        {
             foreach (ParticleHandler<DataType> particle in Particles)
                 if (particle != BestParticle)
                     particle.Model = Move(particle.Model, BestParticle.Model);
+        }
 
+        private void Collide()
+        {
             int particlesCount = Particles.Count();
 
             foreach (int primary in Enumerable.Range(0, particlesCount))
@@ -44,8 +54,36 @@ namespace ParticleSwarmOptimization
                     if (TooClose(secondaryParticle.Model, Particles[primary].Model, ProximityLimit))
                         secondaryParticle.Model = Orbit(secondaryParticle.Model, BestParticle.Model, OrbitRadius);
                 }
+        }
 
-            UpdateFitness();
+
+        private void UpdateFitness()
+        {
+            ParticleHandler<DataType> best = null;
+
+            foreach (ParticleHandler<DataType> particle in Particles)
+            {
+                particle.Fitness = FitnessFunction.Invoke(particle.Model);
+
+                if (IsSuperrior(particle, best))
+                    best = particle;
+            }
+
+            BestParticle = best;
+        }
+
+        private bool IsSuperrior(ParticleHandler<DataType> particleInQuestion, ParticleHandler<DataType> currentBestParticle)
+        {
+            if (currentBestParticle == null)
+                return true;
+
+            if (Mode == OperationMode.Minimization && particleInQuestion.Fitness < currentBestParticle.Fitness)
+                return true;
+
+            if (Mode == OperationMode.Maximization && particleInQuestion.Fitness > currentBestParticle.Fitness)
+                return true;
+
+            return false;
         }
 
         private void SetParticles(IEnumerable<DataType> particles)
@@ -69,35 +107,6 @@ namespace ParticleSwarmOptimization
         {
             Particles = Particles.Concat(particles.Select(p => new ParticleHandler<DataType> { Model = p })).ToArray();
             UpdateFitness();
-        }
-
-        private void UpdateFitness()
-        {
-            ParticleHandler<DataType> best = null;
-
-            foreach (ParticleHandler<DataType> particle in Particles)
-            {
-                particle.Fitness = FitnessFunction.Invoke(particle.Model);
-
-                if(IsSuperrior(particle, best))
-                    best = particle;
-            }
-
-            BestParticle = best;
-        }
-
-        private bool IsSuperrior(ParticleHandler<DataType> particleInQuestion, ParticleHandler<DataType> currentBestParticle)
-        {
-            if (currentBestParticle == null)
-                return true;
-
-            if (Mode == OperationMode.Minimization && particleInQuestion.Fitness < currentBestParticle.Fitness)
-                return true;
-
-            if (Mode == OperationMode.Maximization && particleInQuestion.Fitness > currentBestParticle.Fitness)
-                return true;
-
-            return false;
         }
 
         public DataType GetBestParticle()
