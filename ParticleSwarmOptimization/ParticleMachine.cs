@@ -23,8 +23,8 @@ namespace ParticleSwarmOptimization
         protected abstract bool TooClose(DataType q, DataType r, double limit);
         protected abstract DataType Orbit(DataType particle, DataType target, double radius);
 
-        public abstract double ProximityLimit { get; protected set; }
-        public abstract double OrbitRadius { get; protected set; }
+        public virtual double ProximityLimit { get; protected set; }
+        public virtual double OrbitRadius { get; protected set; }
 
         public void Advance()
         {
